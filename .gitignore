@@ -1,0 +1,74 @@
+# Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.db
+*.sqlite3
+*.env
+*.venv/
+*.envrc
+venv/
+env/
+.env/
+*.DS_Store
+
+# FastAPI
+# If using a virtual environment
+/venv/
+# If using poetry
+/.venv/
+/poetry.lock
+# If using pipenv
+/Pipfile.lock
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+*.swp
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+
+# Logs
+*.log
+*.log.*
+
+# Temporary Files
+*.tmp
+*.bak
+*.swp
+
+# Docker
+Dockerfile
+docker-compose.yml
+*.dockerignore
+
+# Pytest
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+*.hypothesis/
+.tox/
+
+# Coverage Reports
+.coverage
+coverage_html_report/
+
+# Static Files
+staticfiles/
+
+# Database
+db.sqlite3
+*.db
+*.sql
+*.sqlite
+
+# Environment Files
+*.env
+*.envrc
+.env/
