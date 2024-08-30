@@ -17,3 +17,35 @@ class User(Base):
     
     def __repr__(self):
         return f"<User(id={self.id}, username='{self.username}', is_admin={self.is_admin}, is_super_user={self.is_super_user})>"
+    
+
+class Province(Base):
+    __tablename__ = "provinces"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True, index=True)
+    
+    regions = relationship("Region", back_populates="province")
+    
+
+class Region(Base):
+    __tablename__ = "regions"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True, index=True)
+    province_id = Column(Integer, ForeignKey("provinces.id"))
+    
+    province = relationship("Province", back_populates="regions")
+    markets = relationship("Markets", back_populates="region")
+    
+    
+class Markets(Base):
+    __tablename__ = "markets"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True, index=True)
+    region_id = Column(Integer, ForeignKey("regions.id"))
+    region = relationship("Region", back_populates="markets")
+    
+    
+    

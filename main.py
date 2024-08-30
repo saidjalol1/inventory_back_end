@@ -8,11 +8,13 @@ import routes
 from pydantics import user_models
 from auth import auth_main, token
 from database.db_conf import get_db, engine
+import routes.markets_crud
 import routes.super_user_routes
 
 app = FastAPI()
 
 app.include_router(routes.super_user_routes.super)
+app.include_router(routes.markets_crud.market_crud)
 
 
 database_dep : Session = Depends(get_db)
@@ -27,12 +29,12 @@ app.add_middleware(
 
 @app.get("/")
 async def welcome():
-    return {"welcome"}
+    return {"data":"welcome"}
 
 @app.post("/token/")
-async def login(user_token : OAuth2PasswordRequestForm = Depends() ,database = database_dep):
+async def login(user_token : user_models.UserLogin ,database = database_dep):
     try:
-        user = auth_main.authenticate_user(user_token.username,user_token.password, database)
+        user = auth_main.authenticate_user(user_token.username,user_token.hashed_password, database)
         print(user)
         if not user:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail = "Could not validated the User")
