@@ -38,5 +38,3 @@ class ProvinceOut(Province):
     class Config:
         from_attributes = True
         
-class ProvinceIn(Province):
-    name : str

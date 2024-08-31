@@ -35,23 +35,40 @@ def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: Session 
         username = payload.get("sub")
         user_id = payload.get("id")
         if username is None or user_id is None:
-            return {"error":"Bu nom ostidagi foydalanuvchi topilmadi!!!"}
+             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Foydalanuvchi topilmadi")
         user = get_user(username, db)
         return user
     except JWTError:
-        return {"error":"Parol yoki Foydalanuvchi nomi xato"}
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Qayta Login qilib ko'ring token xatolik")
     
     
-def is_super_user(username,db):
-    user = db.query(User).filter(User.username == username).first()
-    if user.is_super_user:
-        return True
-    else:
-        return False
+def is_super_user(token: Annotated[str, Depends(oauth2_scheme)], db: Session = Depends(get_db)):
+    try:
+        payload  = jwt.decode(token, JWT_SECRET, algorithms=[ALGORITH])
+        username = payload.get("sub")
+        user_id = payload.get("id")
+        if username is None or user_id is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Foydalanuvchi topilmadi")
+        user = get_user(username, db)
+        if user.is_super_user:
+            return user
+        else:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Foydalanuvchi SuperUser emas")
+    except JWTError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Qayta Login qilib ko'ring token xatolik")
     
-def is_admin(username,db):
-    user = db.query(User).filter(User.username == username).first()
-    if user.is_admin:
-        return True
-    else:
-        return False
+    
+def is_admin(token: Annotated[str, Depends(oauth2_scheme)], db: Session = Depends(get_db)):
+    try:
+        payload  = jwt.decode(token, JWT_SECRET, algorithms=[ALGORITH])
+        username = payload.get("sub")
+        user_id = payload.get("id")
+        if username is None or user_id is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Foydalanuvchi topilmadi")
+        user = get_user(username, db)
+        if user.is_super_user:
+            return user
+        else:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Foydalanuvchi Admin emas")
+    except JWTError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Qayta Login qilib ko'ring token xatolik")

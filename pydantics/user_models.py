@@ -13,7 +13,7 @@ class User(BaseModel):
 
 class CreateSuperUser(User):
     is_super_user : bool
-    
+    is_admin : bool
     class Config:
         from_attributes = True
 
@@ -42,4 +42,3 @@ class UserOut(CreateUser):
 
 class UserLogin(User):
     username: str
-    hashed_password: str
