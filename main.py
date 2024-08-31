@@ -1,20 +1,21 @@
 from datetime import timedelta
-from fastapi import FastAPI, HTTPException, status
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 
 
-from ver_models import user_models
 from auth import auth_main, token
+from ver_models import user_models
 from dependency.dependencies import database_dep
+from routes import super_user_routes, markets_crud, qr_code, expance
 
 
-from routes import super_user_routes, markets_crud, qr_code
 app = FastAPI()
+app.include_router(expance.app)
+app.include_router(qr_code.code_path)
 app.include_router(super_user_routes.super)
 app.include_router(markets_crud.market_crud)
-app.include_router(qr_code.code_path)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 

@@ -1,12 +1,7 @@
-from fastapi import APIRouter, HTTPException, Depends
-from sqlalchemy.orm import Session
+from fastapi import APIRouter
 from typing import List
-import auth.auth_main
-from crud import CreateObject
-from ver_models import places, user_models
+from ver_models import places
 import models
-from database import db_conf
-import auth
 from dependency.dependencies import super_user, admin_user, user, database_dep
 
 market_crud = APIRouter(
