@@ -47,5 +47,12 @@ class Markets(Base):
     region_id = Column(Integer, ForeignKey("regions.id"))
     region = relationship("Region", back_populates="markets")
     
+
+class QrCode(Base):
+    __tablename__ = "codes"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    number = Column(String, unique=True)
+    qr_code_image = Column(String, unique=True)
     
     

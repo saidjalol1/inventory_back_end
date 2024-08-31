@@ -1,14 +1,9 @@
-from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
-from pydantics import user_models
-from database.db_conf import get_db
+from fastapi import APIRouter
+from ver_models import user_models
 from auth import auth_main , password
-import models
 
-super_user = Depends(auth_main.is_super_user)
-admin_user : user_models.User = Depends(auth_main.is_admin)
-user : user_models.User = Depends(auth_main.is_admin)
-database_dep : Session = Depends(get_db)
+import models
+from dependency.dependencies import super_user, admin_user, user, database_dep
 
 super = APIRouter(
     prefix="/admin",

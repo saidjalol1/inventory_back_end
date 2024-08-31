@@ -1,5 +1,5 @@
 import models
-import pydantics
+import ver_models
 from database.db_conf import get_db
 
 class CreateObject:
