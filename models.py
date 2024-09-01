@@ -75,6 +75,8 @@ class Product(Base):
     amount = Column(Integer, default=0)
     qr_code_id = Column(String(250), nullable=False)
 
+    sales = relationship("SaleItems", back_populates="product")
+    
     def get_overall(self):
         return self.base_price * self.amount
 
@@ -106,7 +108,7 @@ class Sale(Base):
     date_added = Column(Date, nullable=False)
     shop_id = Column(Integer, ForeignKey('markets.id'), nullable=False)
 
-    shop = relationship("Shop", back_populates="sales")
+    shop = relationship("Markets", back_populates="sales")
     items = relationship("SaleItems", back_populates="sale")
 
     def get_amount(self):

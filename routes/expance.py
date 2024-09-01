@@ -6,8 +6,8 @@ from dependency.dependencies import super_user, admin_user, user, database_dep
 import ver_models.expance
 
 app = APIRouter(
-    prefix="/markets",
-    tags = ["Markets"]
+    prefix="/expance",
+    tags = ["Expance"]
 )
 
 
@@ -17,13 +17,13 @@ def read_expances(db = database_dep):
     return expances
 
 
-@app.post("/expance/add", response_model=ver_models.expance.Expance)
+@app.post("/expance/add")
 def create_expance(expance:ver_models.expance.ExpanceCreate, db = database_dep, us = admin_user):
     db_expance = models.Expances(**expance.model_dump())
     db.add(db_expance)
     db.commit()
     db.refresh(db_expance)
-    return db_expance
+    return {"message":"success"}
 
 
 @app.delete("/expances/{expance_id}")

@@ -32,11 +32,11 @@ app.add_middleware(
 async def welcome():
     return {"data":"welcome"}
 
-
+from fastapi import Depends
 @app.post("/token/")
-async def login(user_token : user_models.UserLogin ,database = database_dep):
+async def login(user_token : OAuth2PasswordRequestForm = Depends() ,database = database_dep):
     try:
-        user = auth_main.authenticate_user(user_token.username,user_token.hashed_password, database)
+        user = auth_main.authenticate_user(user_token.username,user_token.password, database)
         print(user)
         if not user:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail = "Could not validated the User")
