@@ -1,7 +1,7 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Float, Date, DateTime
 from sqlalchemy.orm import relationship
 from database.db_conf import Base, current_time
-
+from sqlalchemy import desc
 
 class User(Base):
     __tablename__ = "users"
@@ -56,6 +56,8 @@ class QrCode(Base):
     qr_code_image = Column(String, unique=True)
     
     
+    
+    
 class Expances(Base):
     __tablename__ = "expances"
     
@@ -63,6 +65,10 @@ class Expances(Base):
     name = Column(String)
     amount = Column(Integer, nullable=True)
     date_added = Column(Date)
+    
+    __table_args__ = (
+        {'order_by': [desc('date_added')]},
+    )
     
 
 class Product(Base):
@@ -77,9 +83,11 @@ class Product(Base):
 
     sales = relationship("SaleItems", back_populates="product")
     
-    def get_overall(self):
-        return self.base_price * self.amount
 
+    __table_args__ = (
+        {'order_by': [desc('id')]},
+    )
+    
     def __str__(self):
         return self.name
 
@@ -91,10 +99,14 @@ class Transaction(Base):
     product_id = Column(Integer, ForeignKey('products.id'), nullable=False)
     transaction_type = Column(String(250), nullable=False)
     amount = Column(Integer, nullable=False)
-    date = Column(Date, nullable=False)
+    date = Column(Date, default=current_time)
 
     product = relationship("Product")
 
+    __table_args__ = (
+        {'order_by': [desc('id')]},
+    )
+    
     def __str__(self):
         return f"{self.product.name} - {self.transaction_type} - {self.amount} on {self.date}"
 
@@ -111,6 +123,10 @@ class Sale(Base):
     shop = relationship("Markets", back_populates="sales")
     items = relationship("SaleItems", back_populates="sale")
 
+    __table_args__ = (
+        {'order_by': [desc('date_added')]},
+    )
+    
     def get_amount(self):
         return sum([item.get_amount() for item in self.items])
 
@@ -129,6 +145,12 @@ class SaleItems(Base):
     product = relationship("Product", back_populates="sales")
     sale = relationship("Sale", back_populates="items")
 
+    
+    __table_args__ = (
+        {'order_by': [desc('id')]},
+    )
+    
+    
     def get_income(self):
         profit = self.product.sale_price - self.product.base_price
         return profit * self.quantity
@@ -148,6 +170,10 @@ class MoneyTransactions(Base):
     amount = Column(Integer, default=0)
     date = Column(Date, nullable=False)
 
+    __table_args__ = (
+        {'order_by': [desc('id')]},
+    )
+    
     def __str__(self):
         return str(self.amount)
 
@@ -159,6 +185,10 @@ class Payments(Base):
     amount = Column(Integer, default=0)
     date = Column(Date, nullable=False)
 
+    __table_args__ = (
+        {'order_by': [desc('id')]},
+    )
+    
     def __str__(self):
         return str(self.amount)
     

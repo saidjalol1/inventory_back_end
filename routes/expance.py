@@ -4,6 +4,8 @@ import ver_models
 import models
 from dependency.dependencies import super_user, admin_user, user, database_dep
 import ver_models.expance
+from sqlalchemy import desc
+
 
 app = APIRouter(
     prefix="/expance",
@@ -13,12 +15,12 @@ app = APIRouter(
 
 @app.get("/expances/", response_model=List[ver_models.expance.Expance])
 def read_expances(db = database_dep):
-    expances = db.query(models.Expances).all()
+    expances = db.query(models.Expances).order_by(desc(models.Expances.id)).all()
     return expances
 
 
 @app.post("/expance/add")
-def create_expance(expance:ver_models.expance.ExpanceCreate, db = database_dep, us = admin_user):
+def create_expance(expance:ver_models.expance.ExpanceCreate, db = database_dep, us= admin_user):
     db_expance = models.Expances(**expance.model_dump())
     db.add(db_expance)
     db.commit()
