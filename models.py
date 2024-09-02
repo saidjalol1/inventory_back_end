@@ -56,8 +56,6 @@ class QrCode(Base):
     qr_code_image = Column(String, unique=True)
     
     
-    
-    
 class Expances(Base):
     __tablename__ = "expances"
     
@@ -65,10 +63,6 @@ class Expances(Base):
     name = Column(String)
     amount = Column(Integer, nullable=True)
     date_added = Column(Date)
-    
-    __table_args__ = (
-        {'order_by': [desc('date_added')]},
-    )
     
 
 class Product(Base):
@@ -83,10 +77,6 @@ class Product(Base):
 
     sales = relationship("SaleItems", back_populates="product")
     
-
-    __table_args__ = (
-        {'order_by': [desc('id')]},
-    )
     
     def __str__(self):
         return self.name
@@ -103,9 +93,6 @@ class Transaction(Base):
 
     product = relationship("Product")
 
-    __table_args__ = (
-        {'order_by': [desc('id')]},
-    )
     
     def __str__(self):
         return f"{self.product.name} - {self.transaction_type} - {self.amount} on {self.date}"
@@ -123,9 +110,6 @@ class Sale(Base):
     shop = relationship("Markets", back_populates="sales")
     items = relationship("SaleItems", back_populates="sale")
 
-    __table_args__ = (
-        {'order_by': [desc('date_added')]},
-    )
     
     def get_amount(self):
         return sum([item.get_amount() for item in self.items])
@@ -144,11 +128,6 @@ class SaleItems(Base):
 
     product = relationship("Product", back_populates="sales")
     sale = relationship("Sale", back_populates="items")
-
-    
-    __table_args__ = (
-        {'order_by': [desc('id')]},
-    )
     
     
     def get_income(self):
@@ -170,9 +149,6 @@ class MoneyTransactions(Base):
     amount = Column(Integer, default=0)
     date = Column(Date, nullable=False)
 
-    __table_args__ = (
-        {'order_by': [desc('id')]},
-    )
     
     def __str__(self):
         return str(self.amount)
@@ -185,9 +161,6 @@ class Payments(Base):
     amount = Column(Integer, default=0)
     date = Column(Date, nullable=False)
 
-    __table_args__ = (
-        {'order_by': [desc('id')]},
-    )
     
     def __str__(self):
         return str(self.amount)

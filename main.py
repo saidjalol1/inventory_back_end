@@ -8,11 +8,12 @@ from fastapi.security import OAuth2PasswordRequestForm
 from auth import auth_main, token
 from ver_models import user_models
 from dependency.dependencies import database_dep
-from routes import super_user_routes, markets_crud, qr_code, expance, products, tranzactions
+from routes import super_user_routes, markets_crud, qr_code, expance, products, tranzactions, sale
 
 
 app = FastAPI()
 app.include_router(expance.app)
+app.include_router(sale.app)
 app.include_router(qr_code.code_path)
 app.include_router(products.app)
 app.include_router(tranzactions.app)
