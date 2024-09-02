@@ -114,6 +114,9 @@ class Sale(Base):
     def get_amount(self):
         return sum([item.get_amount() for item in self.items])
 
+    def get_in(self):
+        return sum([item.get_income() for item in self.items])
+    
     def __str__(self):
         return f"{self.date_added} - sale - {self.id}"
 

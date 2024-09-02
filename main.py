@@ -1,19 +1,20 @@
-from datetime import timedelta
+from datetime import timedelta, date
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 
-
+import my_util_functions
 from auth import auth_main, token
+import my_util_functions.stattistika
 from ver_models import user_models
 from dependency.dependencies import database_dep
 from routes import super_user_routes, markets_crud, qr_code, expance, products, tranzactions, sale
 
 
 app = FastAPI()
-app.include_router(expance.app)
 app.include_router(sale.app)
+app.include_router(expance.app)
 app.include_router(qr_code.code_path)
 app.include_router(products.app)
 app.include_router(tranzactions.app)
@@ -32,8 +33,18 @@ app.add_middleware(
 
 
 @app.get("/")
-async def welcome():
-    return {"data":"welcome"}
+async def welcome(db = database_dep):
+    data = {
+        "sales":my_util_functions.stattistika.sales(db)["revenue"],
+        "income":my_util_functions.stattistika.sales(db)["income"],
+        "most_shop": my_util_functions.stattistika.get_most_buying_shop(db),
+        "most_product": my_util_functions.stattistika.get_most_bought_product(db),
+        "sales_chart": my_util_functions.stattistika.get_sales_by_month(db)
+    }
+    return {"income":data["income"],"sales":data["sales"],"most_shop":data["most_shop"],"most_product":data["most_product"], "sales_chart":data["sales_chart"]}
+
+
+
 
 from fastapi import Depends
 @app.post("/token/")
