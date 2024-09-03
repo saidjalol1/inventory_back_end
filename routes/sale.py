@@ -103,3 +103,15 @@ def delete_sale(sale_id: int, db = database_dep):
     db.delete(db_sale)
     db.commit()
     return {"message": "Sale deleted successfully"}
+
+# Get all sales
+@app.get("/sales/market/{id}", response_model=List[sale.Sale])
+def read_sales(id:int,db = database_dep):
+    sales = db.query(models.Sale).order_by(desc(models.Sale.id)).filter(models.Sale.shop_id == id).order_by(desc(models.Sale.id)).all()
+    sales_with_amount = []
+    for sale in sales:
+        sale_data = sale
+        sale_data.amount = sale.get_amount()  # Calculate the total amount
+        sales_with_amount.append(sale_data)
+        
+    return sales_with_amount

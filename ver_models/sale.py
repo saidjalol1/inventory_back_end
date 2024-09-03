@@ -18,7 +18,7 @@ class SaleItem(SaleItemBase):
     
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # Schema for Sale
 class SaleBase(BaseModel):
@@ -37,10 +37,10 @@ class Sale(SaleBase):
     amount: int
     
     class Config:
-        orm_mode = True
+        from_attributes = True
         
 class SaleUpdate(BaseModel):
     payment : int
 
     class Config:
-        orm_mode = True
+        from_attributes = True

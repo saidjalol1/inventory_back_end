@@ -52,3 +52,14 @@ def update_expance(expance_id: int, expance_update:ver_models.expance.ExpanceBas
     db.commit()
     db.refresh(db_expance)
     return db_expance
+
+    
+
+
+@app.post("/money_transactions/")
+def create_money_transaction(money_transaction: ver_models.expance.MoneyTransactionCreate, db = database_dep):
+    db_money_transaction = models.MoneyTransactions(**money_transaction.model_dump())
+    db.add(db_money_transaction)
+    db.commit()
+    db.refresh(db_money_transaction)
+    return db_money_transaction

@@ -70,3 +70,23 @@ def get_sales_by_month(db):
         sales_data[int(sale.month) - 1] = sale.total_sales
 
     return {"series": [{"name": "Sales", "data": sales_data}]}
+
+def calculate_total_price(db):
+  
+    total_added = db.query(
+        func.sum(models.Transaction.amount * models.Product.base_price)
+    ).join(models.Product).filter(models.Transaction.transaction_type == "add").scalar() or 0
+
+   
+    total_removed = db.query(
+        func.sum(models.Transaction.amount * models.Product.base_price)
+    ).join(models.Product).filter(models.Transaction.transaction_type == "remove").scalar() or 0
+
+    total_price = total_added - total_removed
+    
+    return total_price 
+
+def moneys(db):
+    total_money_given = db.query(models.MoneyTransactions).order_by(desc(models.MoneyTransactions.date)).all()
+    return total_money_given
+

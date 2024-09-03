@@ -14,4 +14,18 @@ class Expance(ExpanceBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+        
+
+class MoneyTransactionBase(BaseModel):
+    amount: int
+    date: date
+
+class MoneyTransactionCreate(MoneyTransactionBase):
+    pass
+
+class MoneyTransactionResponse(MoneyTransactionBase):
+    id: int
+
+    class Config:
+        from_attributes = True

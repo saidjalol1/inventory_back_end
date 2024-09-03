@@ -3,14 +3,17 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
+from sqlalchemy import desc
 
 import my_util_functions
 from auth import auth_main, token
 import my_util_functions.stattistika
+import ver_models
 from ver_models import user_models
 from dependency.dependencies import database_dep
 from routes import super_user_routes, markets_crud, qr_code, expance, products, tranzactions, sale
-
+import models
+import ver_models.expance
 
 app = FastAPI()
 app.include_router(sale.app)
@@ -39,9 +42,11 @@ async def welcome(db = database_dep):
         "income":my_util_functions.stattistika.sales(db)["income"],
         "most_shop": my_util_functions.stattistika.get_most_buying_shop(db),
         "most_product": my_util_functions.stattistika.get_most_bought_product(db),
-        "sales_chart": my_util_functions.stattistika.get_sales_by_month(db)
+        "sales_chart": my_util_functions.stattistika.get_sales_by_month(db),
+        "balance" : my_util_functions.stattistika.calculate_total_price(db),
+        "moneys": my_util_functions.stattistika.moneys(db),
     }
-    return {"income":data["income"],"sales":data["sales"],"most_shop":data["most_shop"],"most_product":data["most_product"], "sales_chart":data["sales_chart"]}
+    return data
 
 
 
