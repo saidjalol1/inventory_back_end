@@ -49,6 +49,15 @@ async def province_add(object :places.RegionIn, db = database_dep, us = admin_us
         return {"error":"Oldin qo'shilgan"}
 
 
+# @market_crud.get("/markets/get/{id}", response_model=places.RegionOut)
+# async def regions(id:int,db = database_dep):
+#     try:
+#         obj = db.query(models.Region).filter(models.Region.id == id).first()
+#         return obj  
+#     except Exception as e:
+#         return {"error":e}
+
+
 @market_crud.post("/market/add")
 async def province_add(object :places.MarketIn, db = database_dep, us = admin_user ):
     try:

@@ -11,8 +11,8 @@ app = APIRouter(
 )
 
 # Create a sale with sale items
-@app.post("/sales/", response_model=sale.Sale)
-def create_sale(sale: sale.SaleCreate, db = database_dep):
+@app.post("/sales/", )
+def create_sale(sale: sale.SaleOut, db = database_dep):
     db_sale = models.Sale(
         payment=sale.payment,
         debt=sale.debt,
@@ -24,19 +24,20 @@ def create_sale(sale: sale.SaleCreate, db = database_dep):
     db.refresh(db_sale)
 
     for item in sale.items:
+        pr = db.query(models.Product).filter(models.Product.qr_code_id == item.product_id).first()
         db_sale_item = models.SaleItems(
             quantity=item.quantity,
-            product_id=item.product_id,
+            product_id=pr.id,
             sale_id=db_sale.id
         )
         db.add(db_sale_item)
-    
+        db.commit()
     db.commit()
     db.refresh(db_sale)
     sale_data = db_sale
     sale_data.amount = db_sale.get_amount()
     
-    return sale_data
+    return {"error":"created"}
 
 # Get all sales
 @app.get("/sales/", response_model=List[sale.Sale])

@@ -31,6 +31,16 @@ class SaleBase(BaseModel):
 class SaleCreate(SaleBase):
     items: List[SaleItemCreate]
 
+
+class SaleCreation(BaseModel):
+    payment: int
+    debt: int
+    date_added: date
+    shop_id: int
+
+class SaleOut(SaleCreation):
+    items: List[SaleItemCreate]
+
 class Sale(SaleBase):
     id: int
     items: List[SaleItem]
