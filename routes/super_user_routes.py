@@ -11,7 +11,7 @@ super = APIRouter(
 )
 
 @super.post("/create_super_user")
-async def create_super_user(user: user_models.CreateSuperUser,database=database_dep, a=super_user):
+async def create_super_user(user: user_models.CreateSuperUser,database=database_dep):
    try:
         create_user = models.User(**user.model_dump())
         create_user.hashed_password = password.pwd_context.hash(user.hashed_password)
