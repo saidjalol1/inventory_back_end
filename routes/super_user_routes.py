@@ -23,7 +23,7 @@ async def create_super_user(user: user_models.CreateSuperUser,database=database_
        return {"error":e}
     
     
-@super.post("/create_admin/")
+@super.post("/create_admin")
 async def create_admin(user: user_models.CreateAdmin,database=database_dep,a=super_user):
  
         if auth_main.is_super_user(a.username, database):
@@ -38,7 +38,7 @@ async def create_admin(user: user_models.CreateAdmin,database=database_dep,a=sup
 
     
     
-@super.post("/create_user/")
+@super.post("/create_user")
 async def create_admin(user: user_models.CreateUser,database=database_dep, a= admin_user):
     try:
         create_user = models.User(**user.model_dump())

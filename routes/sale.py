@@ -11,7 +11,7 @@ app = APIRouter(
 )
 
 # Create a sale with sale items
-@app.post("/sales/", )
+@app.post("/sales", )
 def create_sale(sale: sale.SaleOut, db = database_dep):
     db_sale = models.Sale(
         payment=sale.payment,
@@ -40,7 +40,7 @@ def create_sale(sale: sale.SaleOut, db = database_dep):
     return {"error":"created"}
 
 # Get all sales
-@app.get("/sales/", response_model=List[sale.Sale])
+@app.get("/sales", response_model=List[sale.Sale])
 def read_sales(db = database_dep):
     sales = db.query(models.Sale).order_by(desc(models.Sale.id)).all()
     sales_with_amount = []
@@ -51,7 +51,7 @@ def read_sales(db = database_dep):
         
     return sales_with_amount
 
-@app.get("/debts/", response_model=List[sale.Sale])
+@app.get("/debts", response_model=List[sale.Sale])
 def read_sales(skip: int = 0, limit: int = 10, db = database_dep):
     sales = db.query(models.Sale).order_by(desc(models.Sale.id)).filter(models.Sale.debt > 0)
     sales = db.query(models.Sale).order_by(desc(models.Sale.id)).all()

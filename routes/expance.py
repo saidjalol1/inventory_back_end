@@ -13,7 +13,7 @@ app = APIRouter(
 )
 
 
-@app.get("/expances/", response_model=List[ver_models.expance.Expance])
+@app.get("/expances", response_model=List[ver_models.expance.Expance])
 def read_expances(db = database_dep):
     expances = db.query(models.Expances).order_by(desc(models.Expances.id)).all()
     return expances
@@ -56,7 +56,7 @@ def update_expance(expance_id: int, expance_update:ver_models.expance.ExpanceBas
     
 
 
-@app.post("/money_transactions/")
+@app.post("/money_transactions")
 def create_money_transaction(money_transaction: ver_models.expance.MoneyTransactionCreate, db = database_dep):
     db_money_transaction = models.MoneyTransactions(**money_transaction.model_dump())
     db.add(db_money_transaction)

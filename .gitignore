@@ -28,7 +28,8 @@ env/
 *.sublime-workspace
 *.sublime-project
 *.swp
-
+__*
+alembic*
 # Jupyter Notebooks
 .ipynb_checkpoints
 

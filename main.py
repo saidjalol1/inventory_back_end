@@ -52,7 +52,7 @@ async def welcome(db = database_dep):
 
 
 from fastapi import Depends
-@app.post("/token/")
+@app.post("/token")
 async def login(user_token : user_models.UserLogin ,database = database_dep):
     try:
         user = auth_main.authenticate_user(user_token.username,user_token.password, database)
