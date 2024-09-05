@@ -5,6 +5,7 @@ import models
 from ver_models import sale
 from dependency.dependencies import database_dep, admin_user
 from sqlalchemy import desc
+from my_util_functions.stattistika import calculate_total_amount_for_product
 # Create the FastAPI instance
 app = APIRouter(
     tags = ["Sotuvlar"]
@@ -13,6 +14,7 @@ app = APIRouter(
 # Create a sale with sale items
 @app.post("/sales", )
 def create_sale(sale: sale.SaleOut, db = database_dep):
+    
     db_sale = models.Sale(
         payment=sale.payment,
         debt=sale.debt,
@@ -25,6 +27,14 @@ def create_sale(sale: sale.SaleOut, db = database_dep):
 
     for item in sale.items:
         pr = db.query(models.Product).filter(models.Product.qr_code_id == item.product_id).first()
+        total_amount = calculate_total_amount_for_product(db, pr.id)
+        
+        error_messages = []
+        
+        if total_amount < item.quantity:
+            error_messages.append(f"{pr.name} {total_amount} ta mavjud holos")
+            continue
+        
         db_sale_item = models.SaleItems(
             quantity=item.quantity,
             product_id=pr.id,
@@ -32,12 +42,28 @@ def create_sale(sale: sale.SaleOut, db = database_dep):
         )
         db.add(db_sale_item)
         db.commit()
+
+        tr = models.Transaction(
+            product_id = pr.id,
+            amount = item.quantity,
+            transaction_type = "remove"
+        )
+        db.add(tr)
+        db.commit()
+    
     db.commit()
     db.refresh(db_sale)
+    
     sale_data = db_sale
     sale_data.amount = db_sale.get_amount()
+    sale_data.debt = db_sale.get_amount()
     
-    return {"error":"created"}
+    db.commit()
+    db.refresh(db_sale)
+    if error_messages:
+        return {"error":error_messages}
+    else:
+        return {"message":"Barchasi Qo'shildi"}
 
 # Get all sales
 @app.get("/sales", response_model=List[sale.Sale])

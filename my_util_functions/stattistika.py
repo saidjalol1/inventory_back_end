@@ -90,3 +90,24 @@ def moneys(db):
     total_money_given = db.query(models.MoneyTransactions).order_by(desc(models.MoneyTransactions.date)).all()
     return total_money_given
 
+def calculate_total_amount_for_product(db, product_id):
+    # Calculate the total added amount for the specific product
+    total_added = db.query(
+        func.sum(models.Transaction.amount)
+    ).filter(
+        models.Transaction.transaction_type == "add",
+        models.Transaction.product_id == product_id
+    ).scalar() or 0
+
+    # Calculate the total removed amount for the specific product
+    total_removed = db.query(
+        func.sum(models.Transaction.amount)
+    ).filter(
+        models.Transaction.transaction_type == "remove",
+        models.Transaction.product_id == product_id
+    ).scalar() or 0
+
+    # Calculate the total available amount for the product
+    total_amount = total_added - total_removed
+    
+    return total_amount

@@ -35,7 +35,7 @@ app.add_middleware(
 )
 
 
-@app.get("/")
+@app.get("/statistics")
 async def welcome(db = database_dep):
     data = {
         "sales":my_util_functions.stattistika.sales(db)["revenue"],
