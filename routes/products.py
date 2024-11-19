@@ -13,12 +13,14 @@ def read_products(db = database_dep):
     products = db.query(models.Product).order_by(desc(models.Product.id)).all()
     return products
 
+
 @app.get("/products/{product_id}", response_model = product_m.ProductOut)
 def read_product(product_id: int, db = database_dep):
     db_product = db.query(models.Product).filter(models.Product.id == product_id).first()
     if db_product is None:
         raise HTTPException(status_code=404, detail="Product not found")
     return db_product
+
 
 @app.post("/products/add", response_model=product_m.ProductOut)
 def create_product(product:product_m.ProductCreate, db = database_dep):
@@ -27,6 +29,7 @@ def create_product(product:product_m.ProductCreate, db = database_dep):
     db.commit()
     db.refresh(db_product)
     return db_product
+
 
 @app.put("/products/update/{product_id}", response_model=product_m.ProductOut)
 def update_product(product_id: int, product:product_m.ProductUpdate, db = database_dep):
@@ -41,6 +44,7 @@ def update_product(product_id: int, product:product_m.ProductUpdate, db = databa
     db.commit()
     db.refresh(db_product)
     return db_product
+
 
 @app.delete("/products/delete/{product_id}", response_model=product_m.ProductOut)
 def delete_product(product_id: int, db = database_dep):

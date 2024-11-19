@@ -49,9 +49,6 @@ async def welcome(db = database_dep):
     return data
 
 
-
-
-from fastapi import Depends
 @app.post("/token")
 async def login(user_token : user_models.UserLogin ,database = database_dep):
     try:
